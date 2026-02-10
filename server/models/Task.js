@@ -1,15 +1,18 @@
 const mongoose = require('mongoose');
 
-const taskSchema = new mongoose.Schema({
+const taskSchema = mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
+    },
     title: {
         type: String,
         required: [true, 'Please add a title'],
-        trim: true,
-        maxlength: [50, 'Title cannot be more than 50 characters']
+        trim: true
     },
     description: {
-        type: String,
-        maxlength: [500, 'Description cannot be more than 500 characters']
+        type: String
     },
     status: {
         type: String,

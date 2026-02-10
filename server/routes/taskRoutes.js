@@ -14,21 +14,23 @@ const {
 } = require('../controllers/taskController');
 
 // Static Routes (MUST be before dynamic :id routes)
-router.post('/bulk', createBulkTasks);
-router.patch('/complete-all', completeAllTasks);
-router.post('/quick', quickTaskFlow);
+const { protect } = require('../middleware/authMiddleware');
+
+router.post('/bulk', protect, createBulkTasks);
+router.patch('/complete-all', protect, completeAllTasks);
+router.post('/quick', protect, quickTaskFlow);
 
 // General Routes (Get All / Delete by Filter / Create)
 router.route('/')
-    .get(getTasks)
-    .post(createTask)
-    .delete(deleteTasksByStatus);
+    .get(protect, getTasks)
+    .post(protect, createTask)
+    .delete(protect, deleteTasksByStatus);
 
 // Dynamic Routes (ID based)
 router.route('/:id')
-    .get(getTaskById)
-    .put(updateTask)
-    .patch(patchTask)
-    .delete(deleteTask);
+    .get(protect, getTaskById)
+    .put(protect, updateTask)
+    .patch(protect, patchTask)
+    .delete(protect, deleteTask);
 
 module.exports = router;

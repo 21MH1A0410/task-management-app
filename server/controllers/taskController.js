@@ -6,7 +6,7 @@ const Task = require('../models/Task');
 // @route   GET /api/tasks?status=pending&page=1&limit=10
 // @access  Public (will be Private)
 const getTasks = asyncHandler(async (req, res) => {
-    const filter = {};
+    const filter = { user: req.user.id };
     if (req.query.status) {
         filter.status = req.query.status;
     }
@@ -61,6 +61,7 @@ const createTask = asyncHandler(async (req, res) => {
     }
 
     const task = await Task.create({
+        user: req.user.id,
         title: req.body.title,
         description: req.body.description,
         status: req.body.status,
@@ -79,12 +80,13 @@ const createBulkTasks = asyncHandler(async (req, res) => {
         throw new Error('Provide an array of tasks');
     }
 
-    const tasks = await Task.insertMany(req.body);
+    const tasks = req.body.map(task => ({ ...task, user: req.user.id }));
+    const createdTasks = await Task.insertMany(tasks);
 
     res.status(201).json({
         success: true,
-        count: tasks.length,
-        data: tasks
+        count: createdTasks.length,
+        data: createdTasks
     });
 });
 
@@ -104,6 +106,18 @@ const updateTask = asyncHandler(async (req, res) => {
         throw new Error('Task not found');
     }
 
+    // Check for user
+    if (!req.user) {
+        res.status(401);
+        throw new Error('User not found');
+    }
+
+    // Make sure the logged in user matches the task user
+    if (task.user.toString() !== req.user.id) {
+        res.status(401);
+        throw new Error('User not authorized');
+    }
+
     const updatedTask = await Task.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
         runValidators: true
@@ -121,16 +135,30 @@ const patchTask = asyncHandler(async (req, res) => {
         throw new Error('Invalid task ID');
     }
 
+    const task = await Task.findById(req.params.id);
+
+    if (!task) {
+        res.status(404);
+        throw new Error('Task not found');
+    }
+
+    // Check for user
+    if (!req.user) {
+        res.status(401);
+        throw new Error('User not found');
+    }
+
+    // Make sure the logged in user matches the task user
+    if (task.user.toString() !== req.user.id) {
+        res.status(401);
+        throw new Error('User not authorized');
+    }
+
     const updatedTask = await Task.findByIdAndUpdate(
         req.params.id,
         { $set: req.body },
         { new: true, runValidators: true }
     );
-
-    if (!updatedTask) {
-        res.status(404);
-        throw new Error('Task not found');
-    }
 
     res.status(200).json(updatedTask);
 });
@@ -166,6 +194,18 @@ const deleteTask = asyncHandler(async (req, res) => {
         throw new Error('Task not found');
     }
 
+    // Check for user
+    if (!req.user) {
+        res.status(401);
+        throw new Error('User not found');
+    }
+
+    // Make sure the logged in user matches the task user
+    if (task.user.toString() !== req.user.id) {
+        res.status(401);
+        throw new Error('User not authorized');
+    }
+
     await task.deleteOne();
 
     res.status(200).json({ id: req.params.id });
@@ -194,6 +234,7 @@ const deleteTasksByStatus = asyncHandler(async (req, res) => {
 const quickTaskFlow = asyncHandler(async (req, res) => {
     // 1. Create
     const task = await Task.create({
+        user: req.user.id,
         title: req.body.title,
         status: 'pending'
     });

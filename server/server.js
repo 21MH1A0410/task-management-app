@@ -17,16 +17,13 @@ app.use(cors());
 
 // Routes
 app.use('/api/tasks', require('./routes/taskRoutes'));
-
-app.use(errorHandler);
+app.use('/api/users', require('./routes/userRoutes'));
 
 app.get('/', (req, res) => {
     res.send('Task Management API is running');
 });
 
-app.get('/api', (req, res) => {
-    res.send(`Open Tasks in browser: http://localhost:${PORT}/api/tasks`);
-})
+app.use(errorHandler);
 
 // Start Server
 app.listen(PORT, () => {
