@@ -22,7 +22,7 @@ const userSchema = mongoose.Schema({
 }, {
     timestamps: true
 });
-
+ 
 userSchema.set('toJSON', {
     transform: (_, ret) => {
         ret.id = ret._id;
