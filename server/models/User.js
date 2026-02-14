@@ -23,10 +23,6 @@ const userSchema = mongoose.Schema({
     timestamps: true
 });
 
-// Explicit unique index on email
-userSchema.index({ email: 1 }, { unique: true });
-
-// Transform _id to id when converting to JSON (consistent with frontend expectations)
 userSchema.set('toJSON', {
     transform: (_, ret) => {
         ret.id = ret._id;
