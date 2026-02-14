@@ -321,9 +321,7 @@ MIT License - see [LICENSE](LICENSE) for details
 **Rama Raju**  
 Full Stack Developer | MERN Stack
 
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [Rama Raju](https://linkedin.com/in/yourprofile)
-- Portfolio: [your-portfolio.com](https://your-portfolio.com)
+- LinkedIn: [Rama Raju](https://www.linkedin.com/in/rama-raju-b-k/)
 
 ---
 
