@@ -321,7 +321,7 @@ MIT License - see [LICENSE](LICENSE) for details
 **Rama Raju**  
 Full Stack Developer | MERN Stack
 
-- LinkedIn: [Rama Raju](https://www.linkedin.com/in/rama-raju-b-k/)
+- LinkedIn: [Rama Raju](https://www.linkedin.com/in/rama-raju-b-k-/)
 
 ---
 
