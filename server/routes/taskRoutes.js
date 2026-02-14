@@ -1,10 +1,10 @@
+// /server/routes/taskRoutes.js
 const express = require('express');
 const router = express.Router();
 const {
     getTasks,
     getTaskById,
     createTask,
-    createBulkTasks,
     updateTask,
     patchTask,
     completeAllTasks,
@@ -13,24 +13,35 @@ const {
     quickTaskFlow
 } = require('../controllers/taskController');
 
-// Static Routes (MUST be before dynamic :id routes)
+const zodResolver = require('../middleware/zodResolver');
+const {
+    createTaskSchema,
+    updateTaskSchema,
+    patchTaskSchema,
+    getTasksSchema,
+    deleteTasksByStatusSchema,
+    quickTaskSchema,
+    taskIdParamSchema
+} = require('../validations/taskValidation');
+
 const { protect } = require('../middleware/authMiddleware');
 
-router.post('/bulk', protect, createBulkTasks);
-router.patch('/complete-all', protect, completeAllTasks);
-router.post('/quick', protect, quickTaskFlow);
+router.use(protect);
 
-// General Routes (Get All / Delete by Filter / Create)
+router.patch('/complete-all', zodResolver(require('zod').object({})), completeAllTasks);
+router.post('/quick', zodResolver(quickTaskSchema), quickTaskFlow);
+
+// General Routes
 router.route('/')
-    .get(protect, getTasks)
-    .post(protect, createTask)
-    .delete(protect, deleteTasksByStatus);
+    .get(zodResolver(getTasksSchema), getTasks)
+    .post(zodResolver(createTaskSchema), createTask)
+    .delete(zodResolver(deleteTasksByStatusSchema), deleteTasksByStatus);
 
-// Dynamic Routes (ID based)
+// Specific Task Routes
 router.route('/:id')
-    .get(protect, getTaskById)
-    .put(protect, updateTask)
-    .patch(protect, patchTask)
-    .delete(protect, deleteTask);
+    .get(zodResolver(taskIdParamSchema), getTaskById)
+    .put(zodResolver(updateTaskSchema), updateTask)
+    .patch(zodResolver(patchTaskSchema), patchTask)
+    .delete(zodResolver(taskIdParamSchema), deleteTask);
 
 module.exports = router;
