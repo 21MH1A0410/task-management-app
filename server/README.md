@@ -6,8 +6,8 @@ A REST API for managing tasks, built with Node.js, Express, and MongoDB. I built
 
 ## 🌐 Demo
 
-- **Backend API**: [Deploy on Render] (comming soon)
-- **API Docs**: [Postman Collection](https://documenter.getpostman.com/view/your-collection) (comming soon)
+- **Backend API**: [Deploy on Render] (coming soon)
+- **API Docs**: [Postman Collection](https://documenter.getpostman.com/view/your-collection) (coming soon)
 - **Frontend**: React + vite client under development
 
 ---
@@ -265,9 +265,12 @@ Possible future improvements:
 
 ## Testing
 
+The API is fully tested with Jest and Supertest. Run tests with:
+
 ```bash
-# Tests coming soon
+# Tests 
 npm test
+# or for coverage
 npm run test:coverage
 ```
 
@@ -291,8 +294,10 @@ npm run test:coverage
 ```json
 {
   "success": false,
-  "message": "Task not found",
-  "stack": "..." // dev only
+  "error": {
+    "message": "Task not found",
+    "stack": "..."
+  }
 }
 ```
 
