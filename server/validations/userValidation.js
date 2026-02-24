@@ -1,4 +1,3 @@
-// /server/validations/userValidation.js
 const { z } = require('zod');
 
 const registerSchema = z.object({
@@ -10,7 +9,7 @@ const registerSchema = z.object({
         email: z.string({
             required_error: 'Email is required',
             invalid_type_error: 'Email is required'
-        }).trim().email('Invalid email address'),
+        }).trim().email('Invalid email address').transform(val => val.toLowerCase()),
         password: z.string({
             required_error: 'Password is required',
             invalid_type_error: 'Password is required'
@@ -23,11 +22,12 @@ const loginSchema = z.object({
         email: z.string({
             required_error: 'Email is required',
             invalid_type_error: 'Email is required'
-        }).trim().email('Invalid email address'),
+        }).trim().email('Invalid email address').transform(val => val.toLowerCase()),
         password: z.string({
             required_error: 'Password is required',
             invalid_type_error: 'Password is required'
-        }).min(1, 'Password is required')
+        }).min(1, 'Password is required'),
+        rememberMe: z.boolean().optional()
     })
 });
 

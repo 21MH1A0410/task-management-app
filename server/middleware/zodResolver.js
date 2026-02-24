@@ -1,9 +1,8 @@
-// /server/middleware/zodResolver.js
 const { ZodError } = require('zod');
 
 /**
- * Generic Zod validation resolver
- * Allows validating body, params, and query
+ * Validates req.body, req.params, and req.query against a Zod schema in a single pass.
+ * Replaces the request properties with Zod's sanitized/transformed output before calling next().
  */
 const zodResolver = (schema) => (req, res, next) => {
     try {
@@ -13,7 +12,6 @@ const zodResolver = (schema) => (req, res, next) => {
             query: req.query
         });
 
-        // overwrite request with validated data
         req.body = validatedData.body || req.body;
         req.params = validatedData.params || req.params;
         req.query = validatedData.query || req.query;
@@ -23,10 +21,12 @@ const zodResolver = (schema) => (req, res, next) => {
         if (err instanceof ZodError) {
             const errors = err.errors || err.issues || [];
 
+            const errorMessage = errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', ');
+
             return res.status(400).json({
                 success: false,
                 error: {
-                    message: 'Validation failed',
+                    message: errorMessage || 'Validation failed',
                     details: errors.map(e => ({
                         field: e.path.join('.'),
                         message: e.message

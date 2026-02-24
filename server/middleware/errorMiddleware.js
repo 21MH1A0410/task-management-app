@@ -1,25 +1,50 @@
-// /server/middleware/errorMiddleware.js
+const logger = require('../utils/logger');
 
 const errorHandler = (err, req, res, next) => {
     let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+    let details = [];
 
+    // CastError means an invalid MongoDB ObjectId was passed as a route param
     if (err.name === 'CastError') {
         statusCode = 400;
         err.message = 'Resource not found';
+        details = [{
+            field: err.path,
+            message: `Invalid ${err.path}: ${err.value}`
+        }];
     }
 
     if (err.name === 'ValidationError') {
         statusCode = 400;
-        err.message = Object.values(err.errors).map(val => val.message).join(', ');
+        err.message = 'Validation failed';
+        details = Object.values(err.errors).map(val => ({
+            field: val.path,
+            message: val.message
+        }));
     }
 
-    res.status(statusCode);
+    // E11000 duplicate key — surface the specific field that conflicted
+    if (err.code === 11000) {
+        statusCode = 400;
+        const field = Object.keys(err.keyPattern)[0];
+        err.message = `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`;
+        details = [{ field, message: err.message }];
+    }
 
-    // Unified error response format (matches success envelope)
-    res.json({
+    logger.error({
+        requestId: req.id,
+        err,
+        user: req.user,
+        req,
+        statusCode,
+        details
+    }, `Error: ${err.message}`);
+
+    res.status(statusCode).json({
         success: false,
         error: {
-            message: err.message,
+            message: err.message || 'An unexpected error occurred',
+            details,
             ...(process.env.NODE_ENV !== 'production' && { stack: err.stack })
         }
     });

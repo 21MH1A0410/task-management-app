@@ -1,4 +1,3 @@
-// /server/routes/taskRoutes.js
 const express = require('express');
 const router = express.Router();
 const {
@@ -9,8 +8,8 @@ const {
     patchTask,
     completeAllTasks,
     deleteTask,
+    restoreTask,
     deleteTasksByStatus,
-    quickTaskFlow
 } = require('../controllers/taskController');
 
 const zodResolver = require('../middleware/zodResolver');
@@ -20,7 +19,6 @@ const {
     patchTaskSchema,
     getTasksSchema,
     deleteTasksByStatusSchema,
-    quickTaskSchema,
     taskIdParamSchema
 } = require('../validations/taskValidation');
 
@@ -28,20 +26,20 @@ const { protect } = require('../middleware/authMiddleware');
 
 router.use(protect);
 
+// complete-all must be registered before /:id or Express will match "complete-all" as an ID param
 router.patch('/complete-all', zodResolver(require('zod').object({})), completeAllTasks);
-router.post('/quick', zodResolver(quickTaskSchema), quickTaskFlow);
 
-// General Routes
 router.route('/')
     .get(zodResolver(getTasksSchema), getTasks)
     .post(zodResolver(createTaskSchema), createTask)
     .delete(zodResolver(deleteTasksByStatusSchema), deleteTasksByStatus);
 
-// Specific Task Routes
 router.route('/:id')
     .get(zodResolver(taskIdParamSchema), getTaskById)
     .put(zodResolver(updateTaskSchema), updateTask)
     .patch(zodResolver(patchTaskSchema), patchTask)
     .delete(zodResolver(taskIdParamSchema), deleteTask);
+
+router.patch('/:id/restore', zodResolver(taskIdParamSchema), restoreTask);
 
 module.exports = router;
