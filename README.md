@@ -200,7 +200,7 @@ task-management-app/
 
 ## 🤝 Contributing
 
-This is a personal project, but I warmly welcome feedback and suggestions! Feel free to open an issue or submit a pull request if you see something that could be improved. For major changes, please start a discussion first.
+This project was developed during my internship at iStudio. While it's a personal milestone, I warmly welcome feedback and suggestions! Feel free to open an issue or submit a pull request if you see something that could be improved.
 
 ---
 
@@ -210,4 +210,4 @@ Distributed under the **MIT License**. See [LICENSE](./LICENSE) for more informa
 
 ---
 
-**Crafted with care by Rama Raju**
+**Crafted with care by Rama Raju during my internship at iStudio**
