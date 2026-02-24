@@ -1,4 +1,3 @@
-// /server/server.js
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -9,26 +8,37 @@ const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
 const hpp = require('hpp');
 const compression = require('compression');
+const cookieParser = require('cookie-parser');
 const connectDB = require('./config/db');
 const { errorHandler } = require('./middleware/errorMiddleware');
+const requestId = require('./middleware/requestId');
+const httpLogger = require('./middleware/httpLogger');
+const logger = require('./utils/logger');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Trust proxy for deployment behind reverse proxies (Render, Railway, Nginx, Cloudflare)
-app.set('trust proxy', 1);
+// trust proxy only in production — enabling it in dev would let any client spoof X-Forwarded-For
+if (process.env.NODE_ENV === 'production') {
+    app.set('trust proxy', 1);
+}
 
-// Remove Express fingerprint for security
+// Removes the X-Powered-By header to prevent version fingerprinting
 app.disable('x-powered-by');
+
+app.use(requestId);
+app.use(httpLogger);
 
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+// Parses the Cookie header into req.cookies — must come before any middleware that reads cookies
+app.use(cookieParser());
 
 app.use(helmet({
     frameguard: { action: 'deny' }
 }));
 
-// Production blocks all origins unless explicitly allowed via env
+// In production, require an explicit origin whitelist — falling back to '*' here would be a security hole
 app.use(cors({
     origin: process.env.ALLOW_ORIGINS
         ? process.env.ALLOW_ORIGINS.split(',')
@@ -54,7 +64,7 @@ app.use('/api', limiter);
 app.use(mongoSanitize());
 app.use(hpp());
 
-// Skip compression for responses smaller than 1KB
+// Skip compression for payloads under 1KB — the CPU cost isn't worth it
 app.use(compression({ threshold: 1024 }));
 
 if (process.env.NODE_ENV === 'development') {
@@ -71,18 +81,34 @@ app.get('/health', (req, res) => {
     }[dbState] || 'unknown';
 
     const isHealthy = dbState === 1;
+    const memoryUsage = process.memoryUsage();
 
-    res.status(isHealthy ? 200 : 503).json({
-        success: isHealthy,
-        data: {
-            status: isHealthy ? 'ok' : 'degraded',
-            uptime: process.uptime(),
-            timestamp: Date.now(),
-            database: {
-                status: dbStatus,
-                connected: isHealthy
+    // setImmediate measures a rough event-loop delay — a high value signals a blocked loop
+    const start = Date.now();
+    setImmediate(() => {
+        const delay = Date.now() - start;
+
+        res.status(isHealthy ? 200 : 503).json({
+            success: isHealthy,
+            data: {
+                status: isHealthy ? 'ok' : 'degraded',
+                uptime: process.uptime(),
+                timestamp: Date.now(),
+                version: process.env.npm_package_version || '1.0.0',
+                pid: process.pid,
+                nodeVersion: process.version,
+                eventLoopDelay: `${delay}ms`,
+                memory: {
+                    rss: `${Math.round(memoryUsage.rss / 1024 / 1024)}MB`,
+                    heapUsed: `${Math.round(memoryUsage.heapUsed / 1024 / 1024)}MB`,
+                    heapTotal: `${Math.round(memoryUsage.heapTotal / 1024 / 1024)}MB`
+                },
+                database: {
+                    status: dbStatus,
+                    connected: isHealthy
+                }
             }
-        }
+        });
     });
 });
 
@@ -101,7 +127,7 @@ app.use((req, res) => {
     });
 });
 
-// Handle malformed JSON gracefully
+// Intercept malformed JSON before it reaches the generic error handler
 app.use((err, req, res, next) => {
     if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
         return res.status(400).json({
@@ -116,28 +142,27 @@ app.use((err, req, res, next) => {
 
 app.use(errorHandler);
 
-// Prevent startup with weak secrets
+// Fail fast on misconfiguration rather than running with weak or missing secrets
 if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
-    console.error('JWT_SECRET must be at least 32 characters');
+    logger.error('JWT_SECRET must be at least 32 characters');
     process.exit(1);
 }
 if (!process.env.MONGO_URI) {
-    console.error('MONGO_URI is required');
+    logger.error('MONGO_URI is required');
     process.exit(1);
 }
 
 let server;
 
-// Graceful shutdown on SIGINT (Ctrl+C)
 process.on('SIGINT', async () => {
-    console.log('SIGINT received. Shutting down gracefully.');
+    logger.info('SIGINT received. Shutting down gracefully.');
     if (mongoose.connection.readyState !== 0) {
         await mongoose.connection.close();
-        console.log('MongoDB connection closed');
+        logger.info('MongoDB connection closed');
     }
     if (server) {
         server.close(() => {
-            console.log('Server closed.');
+            logger.info('Server closed.');
             process.exit(0);
         });
     } else {
@@ -145,16 +170,23 @@ process.on('SIGINT', async () => {
     }
 });
 
-// Graceful shutdown on SIGTERM (cloud platforms like Render, Railway, Kubernetes)
+// Cloud platforms send SIGTERM before killing the process — drain in-flight requests before exiting
 process.on('SIGTERM', async () => {
-    console.log('SIGTERM received. Shutting down gracefully.');
+    logger.info('SIGTERM received. Shutting down gracefully.');
     if (mongoose.connection.readyState !== 0) {
         await mongoose.connection.close();
-        console.log('MongoDB connection closed');
+        logger.info('MongoDB connection closed');
     }
     if (server) {
+        // Force-kill after 10s if connections don't drain naturally
+        const shutdownTimeout = setTimeout(() => {
+            logger.error('Forced shutdown after timeout - some connections may not have closed gracefully');
+            process.exit(1);
+        }, 10000);
+
         server.close(() => {
-            console.log('Server closed.');
+            clearTimeout(shutdownTimeout);
+            logger.info('Server closed.');
             process.exit(0);
         });
     } else {
@@ -166,14 +198,16 @@ const startServer = async () => {
     try {
         await connectDB();
         server = app.listen(PORT, () => {
-            console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT} `);
-            console.log(`http://localhost:${PORT}`);
+            logger.info(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+            logger.info(`http://localhost:${PORT}`);
         });
     } catch (error) {
-        console.error('Failed to connect to database', error);
+        logger.error({ err: error }, 'Failed to connect to database');
         process.exit(1);
     }
 };
+
+// Skip server startup during test runs so Jest can import the app without side effects
 if (process.env.NODE_ENV !== 'test') {
     startServer();
 }
