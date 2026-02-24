@@ -19,9 +19,6 @@
 .env.test.local
 .env.production.local
 
-# API documentation (for development reference only)
-api_documentation.md
-
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
