@@ -18,23 +18,6 @@ const zodResolver = (schema) => (req, res, next) => {
 
         next();
     } catch (err) {
-        if (err instanceof ZodError) {
-            const errors = err.errors || err.issues || [];
-
-            const errorMessage = errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', ');
-
-            return res.status(400).json({
-                success: false,
-                error: {
-                    message: errorMessage || 'Validation failed',
-                    details: errors.map(e => ({
-                        field: e.path.join('.'),
-                        message: e.message
-                    }))
-                }
-            });
-        }
-
         next(err);
     }
 };

@@ -23,6 +23,17 @@ const errorHandler = (err, req, res, next) => {
         }));
     }
 
+    // Zod validation errors
+    if (err.name === 'ZodError') {
+        statusCode = 400;
+        const errors = err.errors || err.issues || [];
+        err.message = errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', ');
+        details = errors.map(e => ({
+            field: e.path.join('.'),
+            message: e.message
+        }));
+    }
+
     // E11000 duplicate key — surface the specific field that conflicted
     if (err.code === 11000) {
         statusCode = 400;
