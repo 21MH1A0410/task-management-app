@@ -35,7 +35,9 @@ app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
 
 app.use(helmet({
-    frameguard: { action: 'deny' }
+    frameguard: { action: 'deny' },
+    // Allow Cloudflare Pages to embed image buffers sourced from the Render backend API
+    crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
 
 app.use(cors({
