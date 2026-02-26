@@ -6,6 +6,11 @@ const logger = require('../utils/logger');
  * that bypass both patched methods.
  */
 const httpLogger = (req, res, next) => {
+    // Skip logging for frequent health checks to prevent log spam from platforms like Render
+    if (req.originalUrl === '/health') {
+        return next();
+    }
+
     const startTime = Date.now();
 
     const originalJson = res.json;
