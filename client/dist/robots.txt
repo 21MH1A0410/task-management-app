@@ -2,6 +2,8 @@
 # Block private authenticated routes — crawlers can't access them anyway
 # since they 401, but this keeps them out of the crawl budget entirely.
 User-agent: *
+Disallow: /tasks
+Disallow: /profile
 Allow: /
 
-Sitemap: https://task-management-app-2kk.pages.dev/sitemap.xml
+Sitemap: //Remember me i will upadte 

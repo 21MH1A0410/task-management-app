@@ -18,4 +18,15 @@ export default defineConfig({
             },
         },
     },
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    vendor: ['react', 'react-dom'],
+                    router: ['react-router-dom'],
+                    ui: ['react-icons', 'framer-motion', '@headlessui/react', 'react-easy-crop']
+                }
+            }
+        }
+    }
 });
