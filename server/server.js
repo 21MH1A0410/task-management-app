@@ -38,11 +38,10 @@ app.use(helmet({
     frameguard: { action: 'deny' }
 }));
 
-// In production, require an explicit origin whitelist — falling back to '*' here would be a security hole
 app.use(cors({
     origin: process.env.ALLOW_ORIGINS
         ? process.env.ALLOW_ORIGINS.split(',')
-        : (process.env.NODE_ENV === 'production' ? false : '*'),
+        : ['https://task-management-app-2kk.pages.dev', 'http://localhost:3000'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']
 }));
