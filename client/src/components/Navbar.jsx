@@ -76,6 +76,8 @@ const Navbar = () => {
                                             <img
                                                 src={`${import.meta.env.VITE_API_URL || '/api'}/users/${user.id}/profile-pic?t=${user._picTs || ''}`}
                                                 alt={user.name}
+                                                width="36"
+                                                height="36"
                                                 className="h-full w-full object-cover"
                                             />
                                         ) : (
@@ -150,6 +152,8 @@ const Navbar = () => {
                                         <img
                                             src={`${import.meta.env.VITE_API_URL || '/api'}/users/${user.id}/profile-pic?t=${user._picTs || ''}`}
                                             alt={user.name}
+                                            width="48"
+                                            height="48"
                                             className="h-full w-full object-cover"
                                         />
                                     ) : (

@@ -16,7 +16,7 @@ import { registerSchema } from '../validations/schema';
 const RegisterPage = () => {
 
     const strengthConfig = {
-        0: { label: "Very Weak", color: "bg-red-500", text: "text-red-500" },
+        0: { label: "Very Weak", color: "bg-red-500", text: "text-red-600" },
         1: { label: "Weak", color: "bg-orange-500", text: "text-orange-500" },
         2: { label: "Fair", color: "bg-yellow-500", text: "text-yellow-500" },
         3: { label: "Good", color: "bg-blue-500", text: "text-blue-500" },
@@ -122,14 +122,14 @@ const RegisterPage = () => {
                 <div className="relative z-10 bg-white p-6 sm:p-8 rounded-3xl shadow-2xl shadow-slate-200/50 border border-slate-100/60 w-full max-w-md backdrop-blur-sm">
                     <div className="text-center mb-6">
                         <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">Sign Up</h1>
-                        <p className="text-slate-500 mt-3 font-medium">Join us and start organizing</p>
+                        <p className="text-slate-600 mt-3 font-medium">Join us and start organizing</p>
                     </div>
 
                     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
                         {/* Global Error Message */}
                         {globalError && (
                             <div className="flex items-center gap-3 p-4 bg-red-50 border border-red-100 rounded-2xl animate-in slide-in-from-top-2">
-                                <FaExclamationCircle className="text-red-500 shrink-0" />
+                                <FaExclamationCircle className="text-red-600 shrink-0" />
                                 <p className="text-sm font-semibold text-red-600">{globalError}</p>
                             </div>
                         )}
@@ -145,7 +145,7 @@ const RegisterPage = () => {
                             />
                             {errors.name && (
                                 <div className="flex items-center gap-2 mt-2 px-1 animate-in fade-in duration-200">
-                                    <FaExclamationCircle className="text-red-500 text-xs shrink-0" />
+                                    <FaExclamationCircle className="text-red-600 text-xs shrink-0" />
                                     <p className="text-red-600 text-xs font-semibold">{errors.name.message}</p>
                                 </div>
                             )}
@@ -161,7 +161,7 @@ const RegisterPage = () => {
                             />
                             {errors.email && (
                                 <div className="flex items-center gap-2 mt-2 px-1 animate-in fade-in duration-200">
-                                    <FaExclamationCircle className="text-red-500 text-xs shrink-0" />
+                                    <FaExclamationCircle className="text-red-600 text-xs shrink-0" />
                                     <p className="text-red-600 text-xs font-semibold">{errors.email.message}</p>
                                 </div>
                             )}
@@ -214,7 +214,7 @@ const RegisterPage = () => {
 
                                         return (
                                             <div key={req.id} className="flex items-center gap-2 px-1 animate-in fade-in slide-in-from-left-2">
-                                                <span className={`text-[11px] font-semibold tracking-tight transition-colors duration-300 ${(submitAttempted || errors.password) ? 'text-red-500' : 'text-gray-500'}`}>
+                                                <span className={`text-[11px] font-semibold tracking-tight transition-colors duration-300 ${(submitAttempted || errors.password) ? 'text-red-600' : 'text-slate-600'}`}>
                                                     • {req.label}
                                                 </span>
                                             </div>

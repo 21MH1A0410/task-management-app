@@ -87,7 +87,7 @@ const LoginPage = () => {
                 <div className="relative z-10 bg-white p-6 sm:p-8 rounded-3xl shadow-2xl shadow-slate-200/50 border border-slate-100/60 w-full max-w-md backdrop-blur-sm">
                     <div className="text-center mb-6">
                         <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">Welcome Back</h1>
-                        <p className="text-slate-500 mt-3 font-medium">Sign in to manage your tasks</p>
+                        <p className="text-slate-600 mt-3 font-medium">Sign in to manage your tasks</p>
                     </div>
 
                     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
@@ -95,7 +95,7 @@ const LoginPage = () => {
                     even if they've already scrolled past the toast */}
                         {globalError && (
                             <div className="flex items-center gap-3 p-4 bg-red-50 border border-red-100 rounded-2xl animate-in slide-in-from-top-2">
-                                <FaExclamationCircle className="text-red-500 shrink-0" />
+                                <FaExclamationCircle className="text-red-600 shrink-0" />
                                 <p className="text-sm font-semibold text-red-600">{globalError}</p>
                             </div>
                         )}
@@ -111,7 +111,7 @@ const LoginPage = () => {
                             />
                             {errors.email && (
                                 <div className="flex items-center gap-2 mt-2 px-1 animate-in fade-in duration-200">
-                                    <FaExclamationCircle className="text-red-500 text-xs shrink-0" />
+                                    <FaExclamationCircle className="text-red-600 text-xs shrink-0" />
                                     <p className="text-red-600 text-xs font-semibold">{errors.email.message}</p>
                                 </div>
                             )}
@@ -137,7 +137,7 @@ const LoginPage = () => {
                             </div>
                             {errors.password && (
                                 <div className="flex items-center gap-2 mt-2 px-1 animate-in fade-in duration-200">
-                                    <FaExclamationCircle className="text-red-500 text-xs shrink-0" />
+                                    <FaExclamationCircle className="text-red-600 text-xs shrink-0" />
                                     <p className="text-red-600 text-xs font-semibold">{errors.password.message}</p>
                                 </div>
                             )}

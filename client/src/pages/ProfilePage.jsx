@@ -277,7 +277,7 @@ const ProfilePage = () => {
                                     aria-label="Upload profile picture"
                                 />
                                 <h2 className="text-2xl font-black text-slate-900 tracking-tight">{user?.name}</h2>
-                                <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest mt-1 mb-4">{user?.email}</p>
+                                <p className="text-slate-600 font-bold text-[10px] uppercase tracking-widest mt-1 mb-4">{user?.email}</p>
                                 {user?.bio && (
                                     <p className="text-slate-600 text-sm font-medium italic mt-4 max-w-sm mx-auto">"{user.bio}"</p>
                                 )}
@@ -291,7 +291,7 @@ const ProfilePage = () => {
                                     {accountPulse.icon}
                                 </div>
                                 <div>
-                                    <h3 className="text-xs font-black text-slate-500 uppercase tracking-widest">Account Pulse</h3>
+                                    <h3 className="text-xs font-black text-slate-600 uppercase tracking-widest">Account Pulse</h3>
                                     <p className="text-lg font-bold text-slate-900">{accountPulse.label}</p>
                                 </div>
                             </div>
@@ -312,7 +312,7 @@ const ProfilePage = () => {
                                         </div>
                                         <h3 className="text-3xl font-black text-slate-900 tracking-tight">Identity</h3>
                                     </div>
-                                    <p className="text-slate-500 font-medium ml-11">Manage your public personal and biography</p>
+                                    <p className="text-slate-600 font-medium ml-11">Manage your public personal and biography</p>
                                 </div>
                                 <button
                                     onClick={toggleEdit}
@@ -333,7 +333,7 @@ const ProfilePage = () => {
                                             placeholder="Your name"
                                             className={`w-full px-5 py-4 sm:px-6 sm:py-5 rounded-2xl font-bold border-2 transition-all outline-none ${isEditing ? 'border-blue-100 focus:ring-4 focus:ring-blue-50 bg-white' : 'border-transparent bg-slate-50'} ${errors.name ? 'border-red-500' : ''}`}
                                         />
-                                        {errors.name && <p className="text-red-500 text-xs font-bold mt-1">{errors.name.message}</p>}
+                                        {errors.name && <p className="text-red-600 text-xs font-bold mt-1">{errors.name.message}</p>}
                                     </div>
                                     <div className="space-y-3">
                                         <label htmlFor="email-readonly" className="text-sm font-black text-slate-400 uppercase tracking-wider">Email (Read-only)</label>
@@ -355,7 +355,7 @@ const ProfilePage = () => {
                                         placeholder="A short bio..."
                                         className={`w-full px-5 py-4 sm:px-6 sm:py-5 rounded-[2rem] border-2 resize-none outline-none transition-all ${isEditing ? 'border-blue-100 focus:ring-4 focus:ring-blue-50 bg-white' : 'border-transparent bg-slate-50'} ${errors.bio ? 'border-red-500' : ''}`}
                                     />
-                                    {errors.bio && <p className="text-red-500 text-xs font-bold mt-1">{errors.bio.message}</p>}
+                                    {errors.bio && <p className="text-red-600 text-xs font-bold mt-1">{errors.bio.message}</p>}
                                 </div>
                                 {isEditing && (
                                     <button type="submit" disabled={isSubmitting} className="w-full py-5 bg-blue-600 text-white font-black rounded-2xl shadow-xl shadow-blue-500/20 hover:bg-blue-700 cursor-pointer hover:opacity-90 transition-all active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed">
@@ -375,7 +375,7 @@ const ProfilePage = () => {
                                         </div>
                                         <h3 className="text-3xl font-black text-slate-900 tracking-tight">Security</h3>
                                     </div>
-                                    <p className="text-slate-500 font-medium ml-11">Update your password to keep your account safe</p>
+                                    <p className="text-slate-600 font-medium ml-11">Update your password to keep your account safe</p>
                                 </div>
                             </div>
 
@@ -404,7 +404,7 @@ const ProfilePage = () => {
                                         placeholder="Current password"
                                         className={`w-full px-5 py-4 sm:px-6 sm:py-5 rounded-2xl font-bold bg-white border-2 transition-all outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-50 ${passErrors.currentPassword ? 'border-red-500' : 'border-slate-100 hover:border-slate-300'}`}
                                     />
-                                    {passErrors.currentPassword && <p className="text-red-500 text-xs font-bold mt-1">{passErrors.currentPassword.message}</p>}
+                                    {passErrors.currentPassword && <p className="text-red-600 text-xs font-bold mt-1">{passErrors.currentPassword.message}</p>}
                                 </div>
 
                                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 sm:gap-8 pt-2">
@@ -430,15 +430,15 @@ const ProfilePage = () => {
                                                 {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
                                             </button>
                                         </div>
-                                        {passErrors.newPassword && <p className="text-red-500 text-xs font-bold mt-1 max-w-[200px] leading-tight">{passErrors.newPassword.message}</p>}
+                                        {passErrors.newPassword && <p className="text-red-600 text-xs font-bold mt-1 max-w-[200px] leading-tight">{passErrors.newPassword.message}</p>}
 
                                         {/* Password Strength Meter UI */}
                                         <div className="mt-4 px-1">
                                             <div className="flex items-center justify-between mb-2">
-                                                <span className="text-xs font-bold text-slate-500">
+                                                <span className="text-xs font-bold text-slate-600">
                                                     Password Strength
                                                 </span>
-                                                <span className={`text-[11px] font-bold transition-all duration-300 ${newPassValue ? currentStrength.text : 'text-slate-500'}`}>
+                                                <span className={`text-[11px] font-bold transition-all duration-300 ${newPassValue ? currentStrength.text : 'text-slate-600'}`}>
                                                     {currentStrength.label}
                                                 </span>
                                             </div>
@@ -456,7 +456,7 @@ const ProfilePage = () => {
                                                     if (isValid) return null;
                                                     return (
                                                         <div key={req.id} className="flex items-center gap-2 px-1 animate-in fade-in slide-in-from-left-2">
-                                                            <span className={`text-[11px] font-semibold tracking-tight transition-colors duration-300 ${(submitAttemptedPass || passErrors.newPassword) ? 'text-red-500' : 'text-slate-500'}`}>
+                                                            <span className={`text-[11px] font-semibold tracking-tight transition-colors duration-300 ${(submitAttemptedPass || passErrors.newPassword) ? 'text-red-600' : 'text-slate-600'}`}>
                                                                 • {req.label}
                                                             </span>
                                                         </div>
@@ -475,7 +475,7 @@ const ProfilePage = () => {
                                             placeholder="Confirm new password"
                                             className={`w-full px-5 py-4 sm:px-6 sm:py-5 rounded-2xl font-bold bg-white border-2 transition-all outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-50 ${passErrors.confirmPassword ? 'border-red-500' : 'border-slate-100 hover:border-slate-300'}`}
                                         />
-                                        {passErrors.confirmPassword && <p className="text-red-500 text-xs font-bold mt-1">{passErrors.confirmPassword.message}</p>}
+                                        {passErrors.confirmPassword && <p className="text-red-600 text-xs font-bold mt-1">{passErrors.confirmPassword.message}</p>}
                                     </div>
                                 </div>
 
@@ -494,11 +494,11 @@ const ProfilePage = () => {
                                         <FaTrashAlt /> Danger Zone
                                     </h4>
                                     <p className="text-sm text-slate-600 font-medium">Permanently delete your account and all associated tasks.</p>
-                                    <p className="text-xs text-red-500 font-bold mt-1">This action cannot be undone.</p>
+                                    <p className="text-xs text-red-600 font-bold mt-1">This action cannot be undone.</p>
                                 </div>
                                 <button
                                     onClick={() => setShowDeleteConfirm(true)}
-                                    className="whitespace-nowrap px-6 py-3 bg-red-100 text-red-600 font-black rounded-2xl hover:bg-red-600 hover:text-white transition-all duration-300 active:scale-95 shadow-sm focus-ring-error"
+                                    className="whitespace-nowrap px-6 py-3 bg-red-100 text-red-700 font-black rounded-2xl hover:bg-red-600 hover:text-white transition-all duration-300 active:scale-95 shadow-sm focus-ring-error"
                                 >
                                     Delete Account
                                 </button>

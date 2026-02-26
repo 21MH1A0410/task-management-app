@@ -160,7 +160,7 @@ const TaskForm = ({ isOpen, onClose, onSave, taskToEdit }) => {
                 <form onSubmit={handleSubmit(onSubmit, onError)} className="p-5 overflow-y-auto custom-scrollbar flex flex-col gap-4">
                     {globalError && (
                         <div className="flex items-center gap-3 py-2 px-1 animate-in slide-in-from-top-2">
-                            <FaExclamationCircle className="text-red-500 shrink-0" />
+                            <FaExclamationCircle className="text-red-600 shrink-0" />
                             <p className="text-sm font-semibold text-red-600">{globalError}</p>
                         </div>
                     )}
@@ -168,10 +168,10 @@ const TaskForm = ({ isOpen, onClose, onSave, taskToEdit }) => {
                     <div>
                         <div className="flex justify-between items-center mb-2">
                             <label htmlFor="title" className="block text-sm font-semibold text-gray-900">
-                                What needs to be done? <span className="text-red-500">*</span>
+                                What needs to be done? <span className="text-red-600">*</span>
                             </label>
                             {/* Counter turns red at 45/50 to warn before the hard limit is hit */}
-                            <span className={`text-[10px] font-medium transition-colors ${watchTitle.length >= 45 ? 'text-red-500' : 'text-gray-400'}`}>
+                            <span className={`text-[10px] font-medium transition-colors ${watchTitle.length >= 45 ? 'text-red-600' : 'text-slate-500'}`}>
                                 {watchTitle?.length || 0}/50
                             </span>
                         </div>
@@ -191,7 +191,7 @@ const TaskForm = ({ isOpen, onClose, onSave, taskToEdit }) => {
                         </div>
                         {errors.title && (
                             <div id="title-error" className="mt-2 px-1 flex items-center gap-2 animate-in fade-in duration-200" role="alert">
-                                <FaExclamationCircle className="text-red-500 text-xs shrink-0" />
+                                <FaExclamationCircle className="text-red-600 text-xs shrink-0" />
                                 <p className="text-red-600 text-xs font-semibold">{errors.title.message}</p>
                             </div>
                         )}
@@ -202,7 +202,7 @@ const TaskForm = ({ isOpen, onClose, onSave, taskToEdit }) => {
                             <label htmlFor="description" className="block text-sm font-semibold text-gray-900">
                                 Description
                             </label>
-                            <span className={`text-[10px] font-medium transition-colors ${watchDescription.length >= 90 ? 'text-red-500' : 'text-gray-400'}`}>
+                            <span className={`text-[10px] font-medium transition-colors ${watchDescription.length >= 90 ? 'text-red-600' : 'text-slate-500'}`}>
                                 {watchDescription.length}/100
                             </span>
                         </div>
@@ -219,7 +219,7 @@ const TaskForm = ({ isOpen, onClose, onSave, taskToEdit }) => {
                         />
                         {errors.description && (
                             <div id="description-error" className="mt-2 p-2 bg-red-50 border border-red-100 rounded-lg flex items-center gap-2 animate-in fade-in duration-200" role="alert">
-                                <FaExclamationCircle className="text-red-500 text-xs shrink-0" />
+                                <FaExclamationCircle className="text-red-600 text-xs shrink-0" />
                                 <p className="text-red-600 text-xs font-semibold">{errors.description.message}</p>
                             </div>
                         )}
@@ -256,7 +256,7 @@ const TaskForm = ({ isOpen, onClose, onSave, taskToEdit }) => {
                                 ))}
                             </div>
                             {errors.status && (
-                                <p id="status-error" className="text-red-500 text-xs mt-2 font-medium" role="alert">
+                                <p id="status-error" className="text-red-600 text-xs mt-2 font-medium" role="alert">
                                     {errors.status.message}
                                 </p>
                             )}
@@ -286,7 +286,7 @@ const TaskForm = ({ isOpen, onClose, onSave, taskToEdit }) => {
                             </p>
                             {errors.dueDate && (
                                 <div id="dueDate-error" className="mt-2 px-1 flex items-center gap-2 animate-in fade-in duration-200" role="alert">
-                                    <FaExclamationCircle className="text-red-500 text-xs shrink-0" />
+                                    <FaExclamationCircle className="text-red-600 text-xs shrink-0" />
                                     <p className="text-red-600 text-xs font-semibold">{errors.dueDate.message}</p>
                                 </div>
                             )}

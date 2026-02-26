@@ -25,7 +25,7 @@ const Footer = () => {
                             <img src="/logo-57.png" alt="Task Manager Logo" className="h-9 w-9" />
                             <span className="text-slate-900 font-bold text-xl tracking-tight">TaskManager</span>
                         </div>
-                        <p className="text-sm text-slate-500 border-l border-slate-200 pl-8">
+                        <p className="text-sm text-slate-600 border-l border-slate-200 pl-8">
                             Organize your life, focus on your work, and achieve more every day with our intelligent task management platform.
                         </p>
                     </div>
@@ -38,7 +38,7 @@ const Footer = () => {
                 </div>
 
                 {/* Mobile Paragraph */}
-                <p className="mt-4 text-sm text-slate-500 md:hidden leading-relaxed">
+                <p className="mt-4 text-sm text-slate-600 md:hidden leading-relaxed">
                     Organize your life, focus on your work, and achieve more every day with our intelligent task management platform.
                 </p>
 
