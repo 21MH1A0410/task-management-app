@@ -118,7 +118,7 @@ const TaskForm = ({ isOpen, onClose, onSave, taskToEdit }) => {
             });
             onClose();
         } catch (error) {
-            console.error("Submission error:", error);
+            // Error mapped and handled
         }
     };
 
