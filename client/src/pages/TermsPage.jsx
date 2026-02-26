@@ -2,6 +2,9 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
 const TermsPage = () => {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const mailLink = isMobile ? "mailto:ramaraju0407@gmail.com" : "https://mail.google.com/mail/?view=cm&fs=1&to=ramaraju0407@gmail.com";
+
     return (
         <>
             <Helmet>
@@ -14,7 +17,7 @@ const TermsPage = () => {
                 <div className="max-w-4xl mx-auto text-center">
                     <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-4">Terms of Service</h1>
                     <p className="text-lg text-slate-500 mb-2">Please read these terms carefully before using our application.</p>
-                    <p className="text-sm font-semibold text-blue-600">Effective Date: October 2026</p>
+                    <p className="text-sm font-semibold text-blue-600">Effective Date: February 15th, 2026</p>
                 </div>
             </div>
 
@@ -123,9 +126,9 @@ const TermsPage = () => {
                     <div className="mt-16 bg-blue-50 border border-blue-100 rounded-2xl p-6 text-center">
                         <h4 className="text-lg font-bold text-blue-900 mb-2">Questions about these Terms?</h4>
                         <p className="text-blue-700 mb-4">We're here to help clarify any aspect of our service agreement.</p>
-                        <button className="bg-white text-blue-600 font-semibold px-6 py-2.5 rounded-xl border border-blue-200 shadow-sm hover:shadow-md transition-all">
+                        <a href={mailLink} target={isMobile ? "_self" : "_blank"} rel="noopener noreferrer" className="inline-block bg-white text-blue-600 font-semibold px-6 py-2.5 rounded-xl border border-blue-200 shadow-sm hover:shadow-md transition-all">
                             Contact Support
-                        </button>
+                        </a>
                     </div>
 
                 </div>

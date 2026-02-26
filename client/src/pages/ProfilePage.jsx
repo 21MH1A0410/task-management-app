@@ -310,7 +310,7 @@ const ProfilePage = () => {
                                         </div>
                                         <h3 className="text-3xl font-black text-slate-900 tracking-tight">Identity</h3>
                                     </div>
-                                    <p className="text-slate-500 font-medium ml-11">Manage your public persona and biography</p>
+                                    <p className="text-slate-500 font-medium ml-11">Manage your public personal and biography</p>
                                 </div>
                                 <button
                                     onClick={toggleEdit}

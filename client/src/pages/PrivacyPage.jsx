@@ -2,6 +2,9 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
 const PrivacyPage = () => {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const mailLink = isMobile ? "mailto:ramaraju0407@gmail.com" : "https://mail.google.com/mail/?view=cm&fs=1&to=ramaraju0407@gmail.com";
+
     return (
         <>
             <Helmet>
@@ -14,7 +17,7 @@ const PrivacyPage = () => {
                 <div className="max-w-4xl mx-auto text-center">
                     <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-4">Privacy Policy</h1>
                     <p className="text-lg text-slate-500 mb-2">We believe in transparent data handling and absolute security.</p>
-                    <p className="text-sm font-semibold text-blue-600">Effective Date: October 2026</p>
+                    <p className="text-sm font-semibold text-blue-600">Effective Date: February 15th, 2026</p>
                 </div>
             </div>
 
@@ -116,7 +119,7 @@ const PrivacyPage = () => {
 
                     <div className="mt-16 text-center">
                         <p className="text-slate-500 mb-4 text-sm font-medium uppercase tracking-wider">Need Clarification?</p>
-                        <a href="mailto:privacy@taskmanager.com" className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-semibold rounded-xl text-blue-700 bg-blue-100 hover:bg-blue-200 transition-colors">
+                        <a href={mailLink} target={isMobile ? "_self" : "_blank"} rel="noopener noreferrer" className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-semibold rounded-xl text-blue-700 bg-blue-100 hover:bg-blue-200 transition-colors">
                             Email our Privacy Team
                         </a>
                     </div>

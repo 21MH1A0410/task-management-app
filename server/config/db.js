@@ -8,8 +8,7 @@ const MAX_DELAY_MS = 30000;
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 mongoose.set('strictQuery', true);
-// autoIndex=false prevents Mongoose from rebuilding indexes on every deploy in production,
-// which can cause significant latency spikes on large collections
+
 if (process.env.NODE_ENV === 'production') {
     mongoose.set('autoIndex', false);
 }
