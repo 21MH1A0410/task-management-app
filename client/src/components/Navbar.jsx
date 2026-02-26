@@ -13,10 +13,13 @@ const Navbar = () => {
     const location = useLocation();
     const navRef = React.useRef(null);
 
-    const navLinks = useMemo(() => [
-        { name: 'Home', path: '/', icon: <FaHome size={18} /> },
-        { name: 'Tasks', path: '/tasks', icon: <FaList size={18} /> },
-    ], []);
+    const navLinks = useMemo(() => {
+        if (!user) return [];
+        return [
+            { name: 'Home', path: '/', icon: <FaHome size={18} /> },
+            { name: 'Tasks', path: '/tasks', icon: <FaList size={18} /> },
+        ];
+    }, [user]);
 
     const toggleMenu = useCallback(() => setIsOpen(prev => !prev), []);
     const closeMenu = useCallback(() => setIsOpen(false), []);
@@ -45,8 +48,9 @@ const Navbar = () => {
                 <div className="flex justify-between h-16">
                     <div className="flex">
                         <div className="flex-shrink-0 flex items-center">
-                            <Link to="/" className="text-2xl font-bold text-blue-600 tracking-tight">
-                                TaskManager
+                            <Link to="/" className="flex items-center gap-2 text-2xl font-bold text-blue-600 tracking-tight">
+                                <img src="/logo-57.png" alt="Task Manager Logo" className="h-9 w-9" />
+                                <span>TaskManager</span>
                             </Link>
                         </div>
                         <div className="hidden md:ml-8 md:flex md:space-x-8">
