@@ -9,7 +9,7 @@ const Footer = () => {
                     {/* Brand Row (Logo + Links on Mobile) */}
                     <div className="flex w-full md:w-auto justify-between items-center md:hidden">
                         <div className="flex items-center gap-3">
-                            <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-sm">T</div>
+                            <img src="/logo-57.png" alt="Task Manager Logo" className="h-9 w-9" />
                             <span className="text-slate-900 font-bold text-xl tracking-tight">TaskManager</span>
                         </div>
                         {/* Mobile Links */}
@@ -22,7 +22,7 @@ const Footer = () => {
                     {/* Desktop Brand Column */}
                     <div className="hidden md:flex flex-col md:flex-row items-center gap-4 md:gap-8">
                         <div className="flex items-center gap-3">
-                            <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-sm">T</div>
+                            <img src="/logo-57.png" alt="Task Manager Logo" className="h-9 w-9" />
                             <span className="text-slate-900 font-bold text-xl tracking-tight">TaskManager</span>
                         </div>
                         <p className="text-sm text-slate-500 border-l border-slate-200 pl-8">
