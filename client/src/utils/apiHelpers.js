@@ -76,9 +76,7 @@ export const getApiUrl = () => {
 };
 
 export const log = (...args) => {
-    if (import.meta.env.DEV) {
-        console.log(...args);
-    }
+    // Logs removed for production security
 };
 
 export const logError = (...args) => {
