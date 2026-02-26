@@ -19,12 +19,21 @@ export default defineConfig({
         },
     },
     build: {
+        target: 'esnext',
+        assetsInlineLimit: 8192, // Inline assets smaller than 8kb as base64 to save HTTP requests
+        cssCodeSplit: true, // Allow Vite to load CSS asynchronously per chunk
         rollupOptions: {
             output: {
-                manualChunks: {
-                    vendor: ['react', 'react-dom'],
-                    router: ['react-router-dom'],
-                    ui: ['react-icons', '@headlessui/react', 'react-easy-crop']
+                manualChunks(id) {
+                    if (id.includes('node_modules')) {
+                        if (id.includes('react') || id.includes('scheduler')) {
+                            return 'vendor-react';
+                        }
+                        if (id.includes('@headlessui') || id.includes('react-icons') || id.includes('framer-motion')) {
+                            return 'vendor-ui';
+                        }
+                        return 'vendor'; // Fallback for all other node_modules
+                    }
                 }
             }
         }

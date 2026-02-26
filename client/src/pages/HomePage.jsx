@@ -105,6 +105,17 @@ const HomePage = () => {
                                     ),
                                     color: "bg-blue-500"
                                 },
+                                // Insert the hero image here, as it's a visual feature
+                                <div key="hero-image-feature" className="lg:col-span-3 flex justify-center py-12">
+                                    <img
+                                        src="/hero-image.png"
+                                        alt="Task Manager Dashboard Preview"
+                                        className="relative rounded-2xl md:rounded-[2rem] shadow-2xl border-4 border-white object-cover w-full max-w-4xl opacity-90 transition-transform duration-700 hover:scale-[1.02]"
+                                        width="1200"
+                                        height="800"
+                                        fetchpriority="high"
+                                    />
+                                </div>,
                                 {
                                     title: "Secure & Private",
                                     desc: "Your data is encrypted and yours alone. We prioritize your privacy.",
@@ -113,8 +124,7 @@ const HomePage = () => {
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                         </svg>
                                     ),
-                                    color: "bg-purple-500"
-                                }
+                                },
                             ].map((feature, idx) => (
                                 <div key={idx} className="relative group p-6 bg-gray-50 rounded-2xl border border-gray-100 hover:border-blue-100 hover:shadow-md transition-standard">
                                     <div className={`inline-flex items-center justify-center p-3 rounded-2xl ${feature.color} shadow-lg mb-6 group-hover:scale-110 transition-transform duration-300`}>
@@ -157,7 +167,7 @@ const HomePage = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
         </>
     );
 };
