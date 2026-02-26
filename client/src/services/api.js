@@ -28,8 +28,22 @@ api.interceptors.response.use(
         return response.data;
     },
     (error) => {
+        // Handle cases where the backend is completely unreachable (down, CORS error, network offline)
+        if (!error.response) {
+            const customError = new Error('The server is temporarily unreachable. Please check your connection or try again later.');
+            customError.isNetworkError = true;
+            return Promise.reject(customError);
+        }
+
         const status = error.response?.status;
         const errorData = error.response?.data?.error || {};
+
+        // Handle 502/503/504 errors specifically when Render's proxy or backend is down/starting up
+        if (status === 502 || status === 503 || status === 504) {
+            const customError = new Error('The backend service is temporarily down or waking up. Please try again in a moment.');
+            customError.status = status;
+            return Promise.reject(customError);
+        }
 
         const message = errorData.message || (error.code === 'ERR_NETWORK' ? 'Network error: Please check your connection' : error.message) || "An unexpected error occurred";
         const details = errorData.details || [];
