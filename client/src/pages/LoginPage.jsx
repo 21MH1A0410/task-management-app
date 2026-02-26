@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '../context/AuthContext';
@@ -21,6 +21,10 @@ const LoginPage = () => {
     const { login } = useAuth();
     const { showToast } = useToast();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // Validated allowlist for post-login redirects
+    const ALLOWED_REDIRECTS = ['/tasks', '/profile', '/settings'];
 
     const {
         register,
@@ -40,7 +44,12 @@ const LoginPage = () => {
         try {
             await login(data.email, data.password, data.rememberMe);
             showToast('Welcome back!', 'auth');
-            navigate('/tasks');
+
+            // Validate the redirect target against our allowlist to prevent open redirects
+            const targetPath = location.state?.from?.pathname;
+            const safeRedirectPath = ALLOWED_REDIRECTS.includes(targetPath) ? targetPath : '/tasks';
+
+            navigate(safeRedirectPath);
         } catch (err) {
             const serverErrors = mapServerErrors(err);
             if (serverErrors.global) {
@@ -59,6 +68,15 @@ const LoginPage = () => {
             <Helmet>
                 <title>Login | Task Manager</title>
                 <meta name="description" content="Sign in to Task Manager to manage your tasks." />
+                <meta property="og:title" content="Login | Task Manager" />
+                <meta property="og:description" content="Sign in to Task Manager to manage your tasks." />
+                <meta property="og:image" content="https://task-management-app-2kk.pages.dev/og-image-new.png" />
+                <meta property="og:url" content="https://task-management-app-2kk.pages.dev/login" />
+                <meta property="og:type" content="website" />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content="Login | Task Manager" />
+                <meta name="twitter:description" content="Sign in to Task Manager to manage your tasks." />
+                <meta name="twitter:image" content="https://task-management-app-2kk.pages.dev/og-image-new.png" />
             </Helmet>
             <div className="relative flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 min-h-screen overflow-hidden">
                 {/* Ambient Background Glow */}
