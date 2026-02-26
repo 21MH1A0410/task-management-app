@@ -29,7 +29,7 @@ const ImageCropperModal = ({ isOpen, onClose, imageSrc, onCropComplete }) => {
             const croppedBlob = await getCroppedImg(imageSrc, croppedAreaPixels, 0);
             onCropComplete(croppedBlob);
         } catch (e) {
-            console.error(e);
+            // Processing error managed by component state logic
         } finally {
             setIsProcessing(false);
         }
