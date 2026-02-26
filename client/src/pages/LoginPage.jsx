@@ -70,13 +70,13 @@ const LoginPage = () => {
                 <meta name="description" content="Sign in to Task Manager to manage your tasks." />
                 <meta property="og:title" content="Login | Task Manager" />
                 <meta property="og:description" content="Sign in to Task Manager to manage your tasks." />
-                <meta property="og:image" content="https://task-management-app-2kk.pages.dev/og-image-new.png" />
+                <meta property="og:image" content="https://task-management-app-2kk.pages.dev/og-image.jpg" />
                 <meta property="og:url" content="https://task-management-app-2kk.pages.dev/login" />
                 <meta property="og:type" content="website" />
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta name="twitter:title" content="Login | Task Manager" />
                 <meta name="twitter:description" content="Sign in to Task Manager to manage your tasks." />
-                <meta name="twitter:image" content="https://task-management-app-2kk.pages.dev/og-image-new.png" />
+                <meta name="twitter:image" content="https://task-management-app-2kk.pages.dev/og-image.jpg" />
             </Helmet>
             <div className="relative flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 min-h-screen overflow-hidden">
                 {/* Ambient Background Glow */}

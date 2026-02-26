@@ -16,12 +16,12 @@ const HomePage = () => {
                 <meta property="og:title" content="Task Manager | Organize Your Day" />
                 <meta property="og:description" content="Task Manager helps you stay on top of your work. Create, track, and complete tasks with a clean, distraction-free interface." />
                 <meta property="og:type" content="website" />
-                <meta property="og:image" content="https://task-management-app-2kk.pages.dev/og-image-new.png" />
+                <meta property="og:image" content="https://task-management-app-2kk.pages.dev/og-image.jpg" />
                 <meta property="og:url" content="https://task-management-app-2kk.pages.dev/" />
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta name="twitter:title" content="Task Manager | Organize Your Day" />
                 <meta name="twitter:description" content="Task Manager helps you stay on top of your work. Create, track, and complete tasks with a clean, distraction-free interface." />
-                <meta name="twitter:image" content="https://task-management-app-2kk.pages.dev/og-image-new.png" />
+                <meta name="twitter:image" content="https://task-management-app-2kk.pages.dev/og-image.jpg" />
             </Helmet>
 
             <div className="flex-grow bg-blue-50 font-sans text-gray-900 flex flex-col relative overflow-hidden">
