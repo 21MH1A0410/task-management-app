@@ -51,12 +51,22 @@ const errorHandler = (err, req, res, next) => {
         details
     }, `Error: ${err.message}`);
 
+    const isInternalError = statusCode >= 500;
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    // Return generic message and strip details for 500 errors to prevent leaking insights to the client
+    const safeMessage = (isProduction && isInternalError)
+        ? 'Internal Server Error'
+        : (err.message || 'An unexpected error occurred');
+
+    const safeDetails = (isProduction && isInternalError) ? [] : details;
+
     res.status(statusCode).json({
         success: false,
         error: {
-            message: err.message || 'An unexpected error occurred',
-            details,
-            ...(process.env.NODE_ENV !== 'production' && { stack: err.stack })
+            message: safeMessage,
+            details: safeDetails,
+            ...(!isProduction && { stack: err.stack })
         }
     });
 };
