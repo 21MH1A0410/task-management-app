@@ -74,7 +74,7 @@ const Navbar = () => {
                                         {user?.hasProfilePic ? (
                                             // ?t= is a cache-buster timestamp written by updateUser() in AuthContext after upload
                                             <img
-                                                src={`/api/users/${user.id}/profile-pic?t=${user._picTs || ''}`}
+                                                src={`${import.meta.env.VITE_API_URL || '/api'}/users/${user.id}/profile-pic?t=${user._picTs || ''}`}
                                                 alt={user.name}
                                                 className="h-full w-full object-cover"
                                             />
@@ -148,7 +148,7 @@ const Navbar = () => {
                                 <div className="h-12 w-12 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-xl shadow-md overflow-hidden">
                                     {user?.hasProfilePic ? (
                                         <img
-                                            src={`/api/users/${user.id}/profile-pic?t=${user._picTs || ''}`}
+                                            src={`${import.meta.env.VITE_API_URL || '/api'}/users/${user.id}/profile-pic?t=${user._picTs || ''}`}
                                             alt={user.name}
                                             className="h-full w-full object-cover"
                                         />

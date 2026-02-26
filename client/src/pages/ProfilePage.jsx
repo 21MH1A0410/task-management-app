@@ -246,7 +246,7 @@ const ProfilePage = () => {
                                         {/* Image or initials */}
                                         {avatarPreview || user?.hasProfilePic ? (
                                             <img
-                                                src={avatarPreview || `/api/users/${user.id}/profile-pic?t=${avatarTs}`}
+                                                src={avatarPreview || `${import.meta.env.VITE_API_URL || '/api'}/users/${user.id}/profile-pic?t=${avatarTs}`}
                                                 alt="Profile"
                                                 className="h-full w-full object-cover"
                                             />
@@ -268,14 +268,16 @@ const ProfilePage = () => {
 
                                 {/* Hidden file input */}
                                 <input
+                                    id="profile-pic-upload"
                                     ref={fileInputRef}
                                     type="file"
                                     accept="image/jpeg,image/png,image/webp"
                                     className="hidden"
                                     onChange={handleFileChange}
+                                    aria-label="Upload profile picture"
                                 />
                                 <h2 className="text-2xl font-black text-slate-900 tracking-tight">{user?.name}</h2>
-                                <p className="text-slate-400 font-bold text-[10px] uppercase tracking-widest mt-1 mb-4">{user?.email}</p>
+                                <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest mt-1 mb-4">{user?.email}</p>
                                 {user?.bio && (
                                     <p className="text-slate-600 text-sm font-medium italic mt-4 max-w-sm mx-auto">"{user.bio}"</p>
                                 )}
@@ -289,7 +291,7 @@ const ProfilePage = () => {
                                     {accountPulse.icon}
                                 </div>
                                 <div>
-                                    <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Account Pulse</h3>
+                                    <h3 className="text-xs font-black text-slate-500 uppercase tracking-widest">Account Pulse</h3>
                                     <p className="text-lg font-bold text-slate-900">{accountPulse.label}</p>
                                 </div>
                             </div>
@@ -323,8 +325,9 @@ const ProfilePage = () => {
                             <form onSubmit={handleSubmit(onUpdateProfile)} className="space-y-8">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                                     <div className="space-y-3">
-                                        <label className="text-sm font-black text-slate-700 uppercase tracking-wider">Name</label>
+                                        <label htmlFor="name" className="text-sm font-black text-slate-700 uppercase tracking-wider">Name</label>
                                         <input
+                                            id="name"
                                             {...register('name')}
                                             disabled={!isEditing}
                                             placeholder="Your name"
@@ -333,18 +336,19 @@ const ProfilePage = () => {
                                         {errors.name && <p className="text-red-500 text-xs font-bold mt-1">{errors.name.message}</p>}
                                     </div>
                                     <div className="space-y-3">
-                                        <label className="text-sm font-black text-slate-400 uppercase tracking-wider">Email (Read-only)</label>
-                                        <input disabled value={user?.email || ''} className="w-full px-5 py-4 sm:px-6 sm:py-5 rounded-2xl bg-slate-50 text-slate-400 font-semibold italic cursor-not-allowed border-2 border-transparent" />
+                                        <label htmlFor="email-readonly" className="text-sm font-black text-slate-400 uppercase tracking-wider">Email (Read-only)</label>
+                                        <input id="email-readonly" aria-label="Read-only Email Address" disabled value={user?.email || ''} className="w-full px-5 py-4 sm:px-6 sm:py-5 rounded-2xl bg-slate-50 text-slate-400 font-semibold italic cursor-not-allowed border-2 border-transparent" />
                                     </div>
                                 </div>
                                 <div className="space-y-3">
                                     <div className="flex justify-between items-end px-1">
-                                        <label className="text-sm font-black text-slate-700 uppercase tracking-wider">Bio</label>
-                                        <span className={`text-[10px] font-black ${String(bioValue).length > 500 ? 'text-red-500' : 'text-slate-300'}`}>
+                                        <label htmlFor="bio" className="text-sm font-black text-slate-700 uppercase tracking-wider">Bio</label>
+                                        <span className={`text-[10px] font-black ${String(bioValue).length > 500 ? 'text-red-600' : 'text-slate-500'}`}>
                                             {String(bioValue).length} / 500
                                         </span>
                                     </div>
                                     <textarea
+                                        id="bio"
                                         {...register('bio')}
                                         disabled={!isEditing}
                                         rows={4}
@@ -391,8 +395,9 @@ const ProfilePage = () => {
                                 correctly associate the password fields with this account */}
                                 <input type="text" autoComplete="username" value={user?.email || ''} readOnly aria-hidden="true" className="sr-only" tabIndex={-1} />
                                 <div className="space-y-3">
-                                    <label className="text-sm font-black text-slate-700 uppercase tracking-wider">Current Password</label>
+                                    <label htmlFor="currentPassword" className="text-sm font-black text-slate-700 uppercase tracking-wider">Current Password</label>
                                     <input
+                                        id="currentPassword"
                                         {...regPass('currentPassword')}
                                         type="password"
                                         autoComplete="current-password"
@@ -404,9 +409,10 @@ const ProfilePage = () => {
 
                                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 sm:gap-8 pt-2">
                                     <div className="space-y-3">
-                                        <label className="text-sm font-black text-slate-700 uppercase tracking-wider">New Password</label>
+                                        <label htmlFor="newPassword" className="text-sm font-black text-slate-700 uppercase tracking-wider">New Password</label>
                                         <div className="relative">
                                             <input
+                                                id="newPassword"
                                                 {...regPass('newPassword')}
                                                 type={showPassword ? 'text' : 'password'}
                                                 autoComplete="new-password"
@@ -418,7 +424,7 @@ const ProfilePage = () => {
                                             <button
                                                 type="button"
                                                 onClick={() => setShowPassword(!showPassword)}
-                                                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-500 cursor-pointer hover:opacity-90 focus:outline-none transition-colors"
+                                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-blue-600 cursor-pointer hover:opacity-90 focus:outline-none transition-colors p-3"
                                                 aria-label={showPassword ? "Hide password" : "Show password"}
                                             >
                                                 {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
@@ -432,7 +438,7 @@ const ProfilePage = () => {
                                                 <span className="text-xs font-bold text-slate-500">
                                                     Password Strength
                                                 </span>
-                                                <span className={`text-[11px] font-bold transition-all duration-300 ${newPassValue ? currentStrength.text : 'text-slate-400'}`}>
+                                                <span className={`text-[11px] font-bold transition-all duration-300 ${newPassValue ? currentStrength.text : 'text-slate-500'}`}>
                                                     {currentStrength.label}
                                                 </span>
                                             </div>
@@ -460,8 +466,9 @@ const ProfilePage = () => {
                                         </div>
                                     </div>
                                     <div className="space-y-3">
-                                        <label className="text-sm font-black text-slate-700 uppercase tracking-wider">Confirm Password</label>
+                                        <label htmlFor="confirmPassword" className="text-sm font-black text-slate-700 uppercase tracking-wider">Confirm Password</label>
                                         <input
+                                            id="confirmPassword"
                                             {...regPass('confirmPassword')}
                                             type={showPassword ? "text" : "password"}
                                             autoComplete="new-password"
