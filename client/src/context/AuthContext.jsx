@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
             // Tell backend to clear the HttpOnly cookie
             await api.post('/users/logout');
         } catch (err) {
-            console.error('Logout failed:', err);
+            // Error logged server-side
         } finally {
             setUser(null);
             window.location.href = '/login';
