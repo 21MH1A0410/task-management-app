@@ -6,4 +6,4 @@ Disallow: /tasks
 Disallow: /profile
 Allow: /
 
-Sitemap: //Remember me i will upadte 
+Sitemap: https://task-management-app-2kk.pages.dev/sitemap.xml
