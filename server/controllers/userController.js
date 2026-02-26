@@ -29,7 +29,7 @@ const setCookieToken = (res, token, rememberMe = false) => {
     res.cookie('token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
         ...(rememberMe && { maxAge: 30 * 24 * 60 * 60 * 1000 }) // 30 days in ms
     });
 };
@@ -112,7 +112,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     res.clearCookie('token', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict'
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict'
     });
     res.status(200).json({ success: true, message: 'Logged out successfully' });
 });
@@ -227,7 +227,7 @@ const deleteUser = asyncHandler(async (req, res) => {
     res.clearCookie('token', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict'
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict'
     });
 
     res.status(200).json({
