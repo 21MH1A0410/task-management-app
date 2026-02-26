@@ -24,7 +24,7 @@ export default defineConfig({
                 manualChunks: {
                     vendor: ['react', 'react-dom'],
                     router: ['react-router-dom'],
-                    ui: ['react-icons', 'framer-motion', '@headlessui/react', 'react-easy-crop']
+                    ui: ['react-icons', '@headlessui/react', 'react-easy-crop']
                 }
             }
         }
