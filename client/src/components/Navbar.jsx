@@ -43,13 +43,13 @@ const Navbar = () => {
     };
 
     return (
-        <nav ref={navRef} className="bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm sticky top-0 z-30 transition-all">
+        <nav ref={navRef} className="bg-white/60 backdrop-blur-xl border-b border-gray-100 shadow-sm sticky top-0 z-40 transition-all supports-[backdrop-filter]:bg-white/50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between h-16">
+                <div className="flex justify-between h-14">
                     <div className="flex">
                         <div className="flex-shrink-0 flex items-center">
-                            <Link to="/" className="flex items-center gap-2 text-2xl font-bold text-blue-600 tracking-tight">
-                                <img src="/logo-57.png" alt="Task Manager Logo" className="h-9 w-9" />
+                            <Link to="/" className="flex items-center gap-2 text-xl font-bold text-blue-600 tracking-tight">
+                                <img src="/logo-57.png" alt="Task Manager Logo" className="h-8 w-8" />
                                 <span>TaskManager</span>
                             </Link>
                         </div>
@@ -68,67 +68,67 @@ const Navbar = () => {
 
                     <div className="flex items-center gap-4">
                         {user ? (
-                            <Menu as="div" className="relative hidden md:block">
-                                <Menu.Button className="flex items-center space-x-2 focus:outline-none p-1 rounded-full hover:bg-blue-50/50 cursor-pointer hover:opacity-90 active:scale-95 transition-all duration-300 group">
-                                    <div className="h-9 w-9 rounded-full overflow-hidden flex items-center justify-center shadow-sm ring-2 ring-white group-hover:scale-105 group-hover:shadow-md group-hover:ring-blue-100 transition-all duration-300">
-                                        {user?.hasProfilePic ? (
-                                            // ?t= is a cache-buster timestamp written by updateUser() in AuthContext after upload
-                                            <img
-                                                src={`${import.meta.env.VITE_API_URL || '/api'}/users/${user.id}/profile-pic?t=${user._picTs || ''}`}
-                                                alt={user.name}
-                                                width="36"
-                                                height="36"
-                                                className="h-full w-full object-cover"
-                                            />
-                                        ) : (
-                                            <div className="h-full w-full bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white font-bold text-sm">
-                                                {userInitials}
+                            <>
+                                <Menu as="div" className="relative hidden md:block">
+                                    <Menu.Button className="flex items-center space-x-2 focus:outline-none p-1 rounded-full hover:bg-blue-50/50 cursor-pointer hover:opacity-90 active:scale-95 transition-all duration-300 group">
+                                        <div className="h-9 w-9 rounded-full overflow-hidden flex items-center justify-center shadow-sm ring-2 ring-white group-hover:scale-105 group-hover:shadow-md group-hover:ring-blue-100 transition-all duration-300">
+                                            {user?.hasProfilePic ? (
+                                                <img
+                                                    src={`${import.meta.env.VITE_API_URL || '/api'}/users/${user.id}/profile-pic?t=${user._picTs || ''}`}
+                                                    alt={user.name}
+                                                    width="36"
+                                                    height="36"
+                                                    className="h-full w-full object-cover"
+                                                />
+                                            ) : (
+                                                <div className="h-full w-full bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white font-bold text-sm">
+                                                    {userInitials}
+                                                </div>
+                                            )}
+                                        </div>
+                                        <ChevronDownIcon className="h-4 w-4 text-gray-400 group-hover:text-blue-500 transition-colors duration-300" />
+                                    </Menu.Button>
+                                    <Transition
+                                        as={Fragment}
+                                        enter="transition ease-out duration-100"
+                                        enterFrom="transform opacity-0 scale-95"
+                                        enterTo="transform opacity-100 scale-100"
+                                        leave="transition ease-in duration-75"
+                                    >
+                                        <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right bg-white rounded-2xl shadow-xl ring-1 ring-black/5 focus:outline-none overflow-hidden">
+                                            <div className="px-4 py-3 bg-gray-50/50 border-b border-gray-100">
+                                                <p className="text-sm font-bold text-gray-900 truncate">{user.name}</p>
+                                                <p className="text-xs text-gray-500 truncate">{user.email}</p>
                                             </div>
-                                        )}
-                                    </div>
-                                    <ChevronDownIcon className="h-4 w-4 text-gray-400 group-hover:text-blue-500 transition-colors duration-300" />
-                                </Menu.Button>
-                                <Transition
-                                    as={Fragment}
-                                    enter="transition ease-out duration-100"
-                                    enterFrom="transform opacity-0 scale-95"
-                                    enterTo="transform opacity-100 scale-100"
-                                    leave="transition ease-in duration-75"
-                                >
-                                    <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right bg-white rounded-2xl shadow-xl ring-1 ring-black/5 focus:outline-none overflow-hidden">
-                                        <div className="px-4 py-3 bg-gray-50/50 border-b border-gray-100">
-                                            <p className="text-sm font-bold text-gray-900 truncate">{user.name}</p>
-                                            <p className="text-xs text-gray-500 truncate">{user.email}</p>
-                                        </div>
-                                        <div className="py-1">
-                                            <Menu.Item>
-                                                {({ active }) => (
-                                                    <Link to="/profile" className={`flex items-center px-4 py-2.5 text-sm font-medium ${active ? 'bg-blue-50 text-blue-700' : 'text-gray-700'}`}>
-                                                        <FaUser className="mr-3 text-gray-400" size={14} /> My Profile
-                                                    </Link>
-                                                )}
-                                            </Menu.Item>
-                                            <div className="border-t border-gray-100 my-1"></div>
-                                            <Menu.Item>
-                                                {({ active }) => (
-                                                    <button onClick={() => setShowLogoutConfirm(true)} className={`flex w-full items-center px-4 py-2.5 text-sm font-medium cursor-pointer hover:opacity-90 ${active ? 'bg-red-50 text-red-700' : 'text-gray-700'}`}>
-                                                        <FaSignOutAlt className="mr-3 text-gray-400" size={14} /> Logout
-                                                    </button>
-                                                )}
-                                            </Menu.Item>
-                                        </div>
-                                    </Menu.Items>
-                                </Transition>
-                            </Menu>
+                                            <div className="py-1">
+                                                <Menu.Item>
+                                                    {({ active }) => (
+                                                        <Link to="/profile" className={`flex items-center px-4 py-2.5 text-sm font-medium ${active ? 'bg-blue-50 text-blue-700' : 'text-gray-700'}`}>
+                                                            <FaUser className="mr-3 text-gray-400" size={14} /> My Profile
+                                                        </Link>
+                                                    )}
+                                                </Menu.Item>
+                                                <div className="border-t border-gray-100 my-1"></div>
+                                                <Menu.Item>
+                                                    {({ active }) => (
+                                                        <button onClick={() => setShowLogoutConfirm(true)} className={`flex w-full items-center px-4 py-2.5 text-sm font-medium cursor-pointer hover:opacity-90 ${active ? 'bg-red-50 text-red-700' : 'text-gray-700'}`}>
+                                                            <FaSignOutAlt className="mr-3 text-gray-400" size={14} /> Logout
+                                                        </button>
+                                                    )}
+                                                </Menu.Item>
+                                            </div>
+                                        </Menu.Items>
+                                    </Transition>
+                                </Menu>
+                                <button onClick={toggleMenu} className="md:hidden p-2 rounded-xl text-gray-500 hover:bg-gray-100 cursor-pointer hover:opacity-90 focus:outline-none transition-colors">
+                                    {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+                                </button>
+                            </>
                         ) : (
-                            <Link to="/login" className="hidden md:block text-sm font-bold text-blue-600 hover:text-blue-700 bg-blue-50 px-4 py-2 rounded-xl transition-colors">
+                            <Link to="/login" className="text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-xl transition-colors shadow-sm">
                                 Sign In
                             </Link>
                         )}
-
-                        <button onClick={toggleMenu} className="md:hidden p-2 rounded-xl text-gray-500 hover:bg-gray-100 cursor-pointer hover:opacity-90 focus:outline-none transition-colors">
-                            {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-                        </button>
                     </div>
                 </div>
             </div>
