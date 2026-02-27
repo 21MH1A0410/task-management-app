@@ -2,6 +2,23 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
+    :root {
+        --font-inter: 'Inter', system-ui, -apple-system, sans-serif;
+        --font-outfit: 'Outfit', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+        font-family: var(--font-inter);
+        @apply text-slate-900 bg-white;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    .font-display {
+        font-family: var(--font-outfit);
+    }
 
     /* :focus-visible restricts blue rings to keyboard navigation only — mouse clicks don't trigger it */
     button:focus:not(:focus-visible),
@@ -18,6 +35,25 @@
 }
 
 @layer utilities {
+    .bg-glass {
+        @apply bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl;
+    }
+
+    .bg-glass-dark {
+        @apply bg-slate-900/80 backdrop-blur-xl border border-white/10 shadow-2xl;
+    }
+
+    .text-gradient {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600;
+    }
+
+    .text-gradient-purple {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600;
+    }
+
+    .border-gradient {
+        border-image: linear-gradient(to right, #3b82f6, #6366f1) 1;
+    }
 
     .animation-delay-2000 {
         animation-delay: 2s;
@@ -27,7 +63,7 @@
         animation-delay: 4s;
     }
 
-    /* Cross-browser scrollbar hide: webkit + IE/Edge + Firefox each need their own property */
+    /* Cross-browser scrollbar hide */
     .no-scrollbar::-webkit-scrollbar {
         display: none;
     }
@@ -38,19 +74,19 @@
     }
 
     .focus-ring {
-        @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2;
+        @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2;
     }
 
     .focus-ring-error {
-        @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2;
+        @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/50 focus-visible:ring-offset-2;
     }
 
     .transition-standard {
-        @apply transition-all duration-200 ease-in-out;
+        @apply transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)];
     }
 
     .transition-fast {
-        @apply transition-all duration-150 ease-in-out;
+        @apply transition-all duration-200 ease-[cubic-bezier(0.4,0,0.2,1)];
     }
 }
 
@@ -72,14 +108,190 @@
     }
 }
 
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+
+@keyframes pulse-glow {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.6;
+        transform: scale(1.05);
+    }
+}
+
+
+@keyframes marquee-vertical {
+    from {
+        transform: translateY(0) translateZ(0);
+    }
+
+    to {
+        transform: translateY(calc(-50% - 12px)) translateZ(0);
+    }
+}
+
 /* Blob animation is desktop-only — CPU cost on mobile outweighs the visual benefit */
 @media (min-width: 768px) {
     .animate-blob {
         animation: blob 7s infinite;
     }
 
+    .animate-float-slow {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .animate-float-medium {
+        animation: float 5s ease-in-out reverse infinite;
+    }
+
+
+
+    .animate-pulse-glow {
+        animation: pulse-glow 4s ease-in-out infinite;
+    }
+
     .animate-slide-in {
         animation: slide-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .animate-marquee-up-slow {
+        animation: marquee-vertical 25s linear infinite;
+    }
+
+    .animate-marquee-down-slow {
+        animation: marquee-vertical 25s linear infinite reverse;
+    }
+
+    .animate-gradient-move {
+        background-size: 200% 200%;
+        animation: gradient-move 15s ease infinite;
+    }
+
+    .animate-fade-in {
+        animation: fade-in 0.4s ease;
+    }
+
+    .animate-pop {
+        animation: pop 0.5s ease;
+    }
+
+    .animate-slow-pan {
+        animation: slow-pan 10s ease-in-out infinite alternate;
+    }
+
+    .animate-fade-in-up {
+        animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .animation-delay-200 {
+        animation-delay: 200ms;
+    }
+
+    .animation-delay-300 {
+        animation-delay: 300ms;
+    }
+
+    .animation-delay-500 {
+        animation-delay: 500ms;
+    }
+}
+
+/* Premium Grain Texture */
+.hero-noise {
+    position: relative;
+}
+
+.hero-noise::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.035;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+}
+
+.will-change-transform {
+    will-change: transform;
+}
+
+
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(1.5rem);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes gradient-move {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(3px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pop {
+    0% {
+        transform: scale(1);
+    }
+
+    40% {
+        transform: scale(1.04);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes slow-pan {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(-20px);
     }
 }
 
@@ -134,4 +346,27 @@
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
     }
+}
+
+
+
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+/* Height-Based Scaling for Hero Animation */
+@media (max-height: 550px) {
+    .hero-demo-scale {
+        transform: scale(0.92);
+    }
+}
+
+@media (max-height: 450px) {
+    .hero-demo-scale {
+        transform: scale(0.85);
+    }
+}
+
+.premium-shadow {
+    filter: drop-shadow(0 40px 80px rgba(0, 0, 0, 0.12));
 }
