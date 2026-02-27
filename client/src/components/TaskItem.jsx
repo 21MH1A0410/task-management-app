@@ -6,10 +6,11 @@ import {
     FaTrash,
     FaClock,
     FaSpinner as FaSpinnerStatic,
-    FaCheckCircle,
-    FaCalendarAlt
+    FaCheckCircle
 } from 'react-icons/fa';
+import { AlertCircle, Flame, Hourglass, Calendar, CalendarDays, CalendarCheck2 } from 'lucide-react';
 import { STATUS_CONFIG, ACTION_CONFIG, TASK_STATUS } from '../constants/status';
+import { getDueLabel } from '../utils/dateHelpers';
 
 /**
  * Highlights matched search terms within task titles using a word-boundary regex.
@@ -58,33 +59,63 @@ const TaskItem = React.memo(({ task, onEdit, onDelete, onStatusTransition, isTra
         onDelete(task._id);
     }, [task._id, onDelete]);
 
-    /**
-     * Returns urgency-aware styling for the due date badge.
-     * Completed tasks always get a muted style regardless of date — alerting
-     * a user about a missed deadline that's already been resolved is counterproductive.
-     */
-    const getDueDateDetails = () => {
-        if (!task.dueDate) return { style: 'text-gray-400', isOverdue: false, bgBadge: '' };
-        if (isCompleted) return { style: 'text-slate-400', isOverdue: false, bgBadge: '' };
+    // Smart Date Badges Logic
+    const dueObj = getDueLabel(task.dueDate);
 
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+    // Default styles for 'date' or missing
+    let dueStyle = 'text-slate-500 bg-slate-50 border border-slate-100';
+    let DueIcon = Calendar;
+    let urgencyAccent = ''; // Left-border accent for premium SaaS look
 
-        const dueDate = new Date(task.dueDate);
-        dueDate.setHours(0, 0, 0, 0);
-
-        const diffDays = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
-
-        if (diffDays < 0) return { style: 'text-rose-600 font-semibold', isOverdue: true, bgBadge: 'bg-rose-50' };
-        if (diffDays === 0) return { style: 'text-orange-600 font-semibold', isOverdue: false, bgBadge: 'bg-orange-50' };
-        if (diffDays <= 2) return { style: 'text-orange-500 font-medium', isOverdue: false, bgBadge: '' };
-        return { style: 'text-slate-500', isOverdue: false, bgBadge: '' };
-    };
-
-    const { style: dueDateStyle, isOverdue, bgBadge } = getDueDateDetails();
+    if (dueObj) {
+        if (isCompleted) {
+            // Completed Override: Muted grey to prevent guilt UX
+            dueStyle = 'bg-slate-100 text-slate-500 border border-slate-200';
+            DueIcon = CalendarCheck2;
+        } else {
+            // Active Styles
+            switch (dueObj.type) {
+                case 'overdue':
+                    dueStyle = 'bg-rose-100 text-rose-700 font-semibold border border-rose-200/50';
+                    DueIcon = AlertCircle;
+                    urgencyAccent = 'border-l-[4px] border-l-rose-500 border-y-0 border-r-0';
+                    break;
+                case 'today':
+                    dueStyle = 'bg-orange-100 text-orange-700 font-semibold border border-orange-200/50';
+                    DueIcon = Flame;
+                    urgencyAccent = 'border-l-[4px] border-l-orange-400 border-y-0 border-r-0';
+                    break;
+                case 'tomorrow':
+                    dueStyle = 'bg-amber-50 text-amber-700 font-medium border border-amber-200/50';
+                    DueIcon = Hourglass;
+                    break;
+                case 'this_week':
+                    dueStyle = 'bg-purple-50 text-purple-700 font-medium border border-purple-200/50';
+                    DueIcon = CalendarDays;
+                    break;
+                case 'next_week':
+                    dueStyle = 'bg-blue-50 text-blue-700 font-medium border border-blue-200/50';
+                    DueIcon = CalendarDays;
+                    break;
+                case 'this_month':
+                    dueStyle = 'bg-indigo-50 text-indigo-700 font-medium border border-indigo-100/50';
+                    DueIcon = Calendar;
+                    break;
+                case 'next_month':
+                    dueStyle = 'bg-teal-50 text-teal-700 font-medium border border-teal-100/50';
+                    DueIcon = Calendar;
+                    break;
+                default:
+                    // default standard date styling
+                    dueStyle = 'text-slate-500 bg-slate-50 border border-slate-100';
+                    DueIcon = Calendar;
+                    break;
+            }
+        }
+    }
 
     return (
-        <div className={`group relative bg-white rounded-2xl p-4 min-h-[220px] border border-gray-100 border-l-4 shadow-sm hover:shadow-lg transition-standard flex flex-col justify-between h-full ${statusConfig.borderColor} ${statusConfig.bgStyle}`}>
+        <div className={`group relative bg-white rounded-2xl p-4 min-h-[220px] transition-standard flex flex-col justify-between h-full shadow-sm hover:shadow-lg ${urgencyAccent ? urgencyAccent : `border border-gray-100 border-l-4 ${statusConfig.borderColor}`} ${statusConfig.bgStyle}`}>
 
             <div className="flex-1 space-y-2">
                 <div className="flex justify-between items-start">
@@ -97,19 +128,14 @@ const TaskItem = React.memo(({ task, onEdit, onDelete, onStatusTransition, isTra
                         </span>
                     </span>
                     <div className="flex flex-col items-end gap-1">
-                        {task.dueDate ? (
-                            <span className={`text-xs flex items-center gap-1.5 px-2 py-1 ${bgBadge || 'bg-gray-50'} rounded-md border border-gray-100 ${dueDateStyle}`}>
-                                {isOverdue ? (
-                                    // Pulsing dot makes overdue tasks immediately scannable in a long list
-                                    <div className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
-                                ) : (
-                                    <FaCalendarAlt className="w-3 h-3 opacity-90" />
-                                )}
-                                {new Date(task.dueDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                        {dueObj ? (
+                            <span className={`text-[11px] flex items-center gap-1.5 px-2.5 py-1 rounded-md transition-colors ${dueStyle}`}>
+                                <DueIcon size={12} strokeWidth={2.5} className="opacity-80" />
+                                {dueObj.label}
                             </span>
                         ) : (
-                            <span className="text-xs flex items-center gap-1.5 px-2 py-1 text-gray-400 bg-gray-50 rounded-md border border-slate-50">
-                                <FaCalendarAlt className="w-3 h-3 opacity-50" />
+                            <span className="text-[11px] flex items-center gap-1.5 px-2.5 py-1 text-gray-400 bg-gray-50 rounded-md border border-slate-100">
+                                <Calendar size={12} strokeWidth={2} className="opacity-50" />
                                 No Date
                             </span>
                         )}
