@@ -21,11 +21,12 @@ A full-stack task management application built with heart. It helps you keep tra
 
 ### Frontend
 - **React 18 + Vite**: Fast development and hot module replacement.
-- **React Router v6**: URL-driven navigation.
+- **React Router v6 & Suspense**: URL-driven navigation and lazy-loaded code-splitting.
 - **Tailwind CSS + Headless UI**: Modern, responsive styling with accessible components.
 - **React Hook Form + Zod**: Type-safe form handling and validation (schemas shared with backend).
+- **React Helmet Async**: Dynamic HEAD tag manipulation for built-in SEO.
 - **React Easy Crop**: Intuitive image cropping.
-- **Axios**: HTTP client with interceptors for cookie-based auth.
+- **Axios**: HTTP client with global interceptors handling cookie-based auth, server downtime, and rate limits.
 
 ### Backend
 - **Node.js + Express**: Lightweight, scalable API layer.
@@ -39,6 +40,14 @@ A full-stack task management application built with heart. It helps you keep tra
 
 ---
 
+## 🌐 Live Links
+
+- **Live Application (Cloudflare Pages):** [https://task-management-app-2kk.pages.dev/](https://task-management-app-2kk.pages.dev/)
+- **Backend API (Render):** [https://task-management-app-piyh.onrender.com/](https://task-management-app-piyh.onrender.com/)
+- **GitHub Repository:** [https://github.com/21MH1A0410/task-management-app.git](https://github.com/21MH1A0410/task-management-app.git)
+
+---
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -47,7 +56,7 @@ A full-stack task management application built with heart. It helps you keep tra
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/task-management-app.git
+git clone https://github.com/21MH1A0410/task-management-app.git
 cd task-management-app
 ```
 
@@ -152,11 +161,13 @@ All endpoints return a consistent JSON envelope:
 - `DELETE /api/tasks?status=...&confirm=true` – Bulk delete by status
 
 ### Profile
+- `GET /api/users/me` – Get current user info
 - `PUT /api/users/profile` – Update name/bio
 - `PUT /api/users/password` — Change password (invalidates all other sessions)
+- `POST /api/users/revoke-all-sessions` — Manually revoke all active sessions
 - `DELETE /api/users/profile` – Permanently delete account
 - `PUT /api/users/profile-pic` – Upload a profile picture (`multipart/form-data`)
-- `GET /api/users/:id/profile-pic` – Public endpoint for profile pictures
+- `GET /api/users/:id/profile-pic` – Public endpoint for retrieving profile pictures
 
 ---
 
@@ -189,12 +200,14 @@ task-management-app/
 ## 🧠 Key Design Decisions
 
 - **HttpOnly Cookies for Auth**: JavaScript can’t read the token, so XSS attacks can’t steal it. The browser automatically sends it with every request.
+- **Global Error Interceptors**: Axios handles 502/503 network states, 429 rate limits, and 401 token expirations globally preventing redundant UI error-handling code.
 - **Token Versioning**: When you change your password or click “revoke all sessions”, we bump a number stored in the database. Old tokens become instantly invalid – even if they haven’t expired.
 - **Soft Delete with TTL**: Deleted tasks are marked `isDeleted: true` and get a `deletedAt` timestamp. A MongoDB TTL index permanently removes them after 7 days, giving you a week to change your mind.
 - **Optimistic UI**: The `useTasks` hook updates local state immediately. If the API call fails, it rolls back. A counter of active mutations prevents background syncs from overwriting optimistic changes.
 - **URL-Driven Filtering**: All filter, sort, and pagination parameters live in the URL query string. This makes the back button work naturally and lets you share or bookmark specific views.
 - **Zod Everywhere**: We validate user input on both the frontend (forms) and backend (requests) with the same schemas, ensuring consistency and reducing bugs.
 - **Efficient Image Processing**: Profile pictures are cropped client-side, then resized and converted to JPEG server-side using Sharp. Storing as Buffer in MongoDB avoids file-system clutter.
+- **Code-Splitting & Fallbacks**: React Suspense lazy-loads heavy page bundles, keeping initial loads instant. It also explicitly handles static `Terms`, `Privacy`, and `404 Not Found` fallback routing.
 
 ---
 
